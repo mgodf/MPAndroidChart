@@ -59,7 +59,7 @@ public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
     }
 
     @Override
-    public void calcMinMax() {
+    public synchronized void calcMinMax() {
 
         mYMax = -Float.MAX_VALUE;
         mYMin = Float.MAX_VALUE;
@@ -75,7 +75,7 @@ public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
     }
 
     @Override
-    public void calcMinMaxY(float fromX, float toX) {
+    public synchronized void calcMinMaxY(float fromX, float toX) {
         mYMax = -Float.MAX_VALUE;
         mYMin = Float.MAX_VALUE;
         
@@ -99,7 +99,7 @@ public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
      *
      * @param e
      */
-    protected void calcMinMax(T e) {
+    protected synchronized void calcMinMax(T e) {
 
         if (e == null)
             return;
@@ -109,7 +109,7 @@ public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
         calcMinMaxY(e);
     }
 
-    protected void calcMinMaxX(T e) {
+    protected synchronized void calcMinMaxX(T e) {
 
         if (e.getX() < mXMin)
             mXMin = e.getX();
@@ -118,7 +118,7 @@ public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
             mXMax = e.getX();
     }
 
-    protected void calcMinMaxY(T e) {
+    protected synchronized void calcMinMaxY(T e) {
 
         if (e.getY() < mYMin)
             mYMin = e.getY();
@@ -128,7 +128,7 @@ public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
     }
 
     @Override
-    public int getEntryCount() {
+    public synchronized int getEntryCount() {
         return mEntries.size();
     }
 
@@ -139,7 +139,7 @@ public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
      * @return
      */
     @Deprecated
-    public List<T> getValues() {
+    public synchronized List<T> getValues() {
         return mEntries;
     }
 
@@ -148,7 +148,7 @@ public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
      *
      * @return
      */
-    public List<T> getEntries() {
+    public synchronized List<T> getEntries() {
         return mEntries;
     }
 
@@ -159,7 +159,7 @@ public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
      * @param values
      */
     @Deprecated
-    public void setValues(List<T> values) {
+    public synchronized void setValues(List<T> values) {
         setEntries(values);
     }
 
@@ -168,7 +168,7 @@ public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
      *
      * @return
      */
-    public void setEntries(List<T> entries) {
+    public synchronized void setEntries(List<T> entries) {
         mEntries = entries;
         notifyDataSetChanged();
     }
@@ -184,7 +184,7 @@ public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
      *
      * @param dataSet
      */
-    protected void copy(DataSet dataSet) {
+    protected synchronized void copy(DataSet dataSet) {
         super.copy(dataSet);
     }
 
@@ -204,7 +204,7 @@ public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
      *
      * @return
      */
-    public String toSimpleString() {
+    public synchronized String toSimpleString() {
         StringBuffer buffer = new StringBuffer();
         buffer.append("DataSet, label: " + (getLabel() == null ? "" : getLabel()) + ", entries: " + mEntries.size() +
                 "\n");
@@ -212,27 +212,27 @@ public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
     }
 
     @Override
-    public float getYMin() {
+    public synchronized float getYMin() {
         return mYMin;
     }
 
     @Override
-    public float getYMax() {
+    public synchronized float getYMax() {
         return mYMax;
     }
 
     @Override
-    public float getXMin() {
+    public synchronized float getXMin() {
         return mXMin;
     }
 
     @Override
-    public float getXMax() {
+    public synchronized float getXMax() {
         return mXMax;
     }
 
     @Override
-    public void addEntryOrdered(T e) {
+    public synchronized void addEntryOrdered(T e) {
 
         if (e == null)
             return;
@@ -252,13 +252,13 @@ public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
     }
 
     @Override
-    public void clear() {
+    public synchronized void clear() {
         mEntries.clear();
         notifyDataSetChanged();
     }
 
     @Override
-    public boolean addEntry(T e) {
+    public synchronized boolean addEntry(T e) {
 
         if (e == null)
             return false;
@@ -275,7 +275,7 @@ public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
     }
 
     @Override
-    public boolean removeEntry(T e) {
+    public synchronized boolean removeEntry(T e) {
 
         if (e == null)
             return false;
@@ -294,12 +294,12 @@ public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
     }
 
     @Override
-    public int getEntryIndex(Entry e) {
+    public synchronized int getEntryIndex(Entry e) {
         return mEntries.indexOf(e);
     }
 
     @Override
-    public T getEntryForXValue(float xValue, float closestToY, Rounding rounding) {
+    public synchronized T getEntryForXValue(float xValue, float closestToY, Rounding rounding) {
 
         int index = getEntryIndex(xValue, closestToY, rounding);
         if (index > -1)
@@ -308,17 +308,17 @@ public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
     }
 
     @Override
-    public T getEntryForXValue(float xValue, float closestToY) {
+    public synchronized T getEntryForXValue(float xValue, float closestToY) {
         return getEntryForXValue(xValue, closestToY, Rounding.CLOSEST);
     }
 
     @Override
-    public T getEntryForIndex(int index) {
+    public synchronized T getEntryForIndex(int index) {
         return mEntries.get(index);
     }
 
     @Override
-    public int getEntryIndex(float xValue, float closestToY, Rounding rounding) {
+    public synchronized int getEntryIndex(float xValue, float closestToY, Rounding rounding) {
 
         if (mEntries == null || mEntries.isEmpty())
             return -1;
@@ -403,7 +403,7 @@ public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
     }
 
     @Override
-    public List<T> getEntriesForXValue(float xValue) {
+    public synchronized List<T> getEntriesForXValue(float xValue) {
 
         List<T> entries = new ArrayList<T>();
 
