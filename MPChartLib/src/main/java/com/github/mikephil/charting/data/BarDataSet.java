@@ -168,7 +168,7 @@ public class BarDataSet extends BarLineScatterCandleBubbleDataSet<BarEntry> impl
     }
 
     @Override
-    protected void calcMinMax(BarEntry e) {
+    public void calcMinMax(BarEntry e) {
 
         if (e != null && !Float.isNaN(e.getY())) {
 

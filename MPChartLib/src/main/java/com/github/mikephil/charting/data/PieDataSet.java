@@ -53,7 +53,7 @@ public class PieDataSet extends DataSet<PieEntry> implements IPieDataSet {
     }
 
     @Override
-    protected void calcMinMax(PieEntry e) {
+    public void calcMinMax(PieEntry e) {
 
         if (e == null)
             return;

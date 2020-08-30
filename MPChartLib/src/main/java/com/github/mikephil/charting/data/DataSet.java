@@ -99,7 +99,7 @@ public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
      *
      * @param e
      */
-    protected synchronized void calcMinMax(T e) {
+    public synchronized void calcMinMax(T e) {
 
         if (e == null)
             return;

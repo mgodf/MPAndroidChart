@@ -450,7 +450,7 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
      * @param e
      * @param axis
      */
-    protected void calcMinMax(Entry e, AxisDependency axis) {
+    public void calcMinMax(Entry e, AxisDependency axis) {
 
         if (mYMax < e.getY())
             mYMax = e.getY();
