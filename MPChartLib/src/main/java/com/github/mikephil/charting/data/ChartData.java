@@ -124,11 +124,32 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
     }
 
     /**
+     * Calc minimum and maximum y-values over all DataSets.
+     * Tell DataSets to recalculate their min and max y-values, this is only needed for autoScaleMinMax.
+     *
+     * @param fromX the x-value to start the calculation from
+     * @param toX   the x-value to which the calculation should be performed
+     * @param dataSets list of data sets to calculate min/max for
+     */
+    public void calcMinMaxY(float fromX, float toX, List<T> dataSets) {
+
+        for (T set : dataSets) {
+            set.calcMinMaxY(fromX, toX);
+        }
+
+        // apply the new data
+        calcMinMax(dataSets);
+    }
+
+    /**
      * Calc minimum and maximum values (both x and y) over all DataSets.
      */
     protected void calcMinMax() {
+        calcMinMax(mDataSets);
+    }
 
-        if (mDataSets == null)
+    private void calcMinMax(List<T> dataSets){
+        if (dataSets == null)
             return;
 
         mYMax = -Float.MAX_VALUE;
@@ -136,7 +157,7 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
         mXMax = -Float.MAX_VALUE;
         mXMin = Float.MAX_VALUE;
 
-        for (T set : mDataSets) {
+        for (T set : dataSets) {
             calcMinMax(set);
         }
 
@@ -146,14 +167,14 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
         mRightAxisMin = Float.MAX_VALUE;
 
         // left axis
-        T firstLeft = getFirstLeft(mDataSets);
+        T firstLeft = getFirstLeft(dataSets);
 
         if (firstLeft != null) {
 
             mLeftAxisMax = firstLeft.getYMax();
             mLeftAxisMin = firstLeft.getYMin();
 
-            for (T dataSet : mDataSets) {
+            for (T dataSet : dataSets) {
                 if (dataSet.getAxisDependency() == AxisDependency.LEFT) {
                     if (dataSet.getYMin() < mLeftAxisMin)
                         mLeftAxisMin = dataSet.getYMin();
@@ -165,14 +186,14 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
         }
 
         // right axis
-        T firstRight = getFirstRight(mDataSets);
+        T firstRight = getFirstRight(dataSets);
 
         if (firstRight != null) {
 
             mRightAxisMax = firstRight.getYMax();
             mRightAxisMin = firstRight.getYMin();
 
-            for (T dataSet : mDataSets) {
+            for (T dataSet : dataSets) {
                 if (dataSet.getAxisDependency() == AxisDependency.RIGHT) {
                     if (dataSet.getYMin() < mRightAxisMin)
                         mRightAxisMin = dataSet.getYMin();
